@@ -4,6 +4,7 @@
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="org.wso2.carbon.message.flow.tracer.ui.MessageFlowTracerClient" %>
+<%@ page import="org.wso2.carbon.message.flow.tracer.data.xsd.ComponentNode" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <fmt:bundle basename="org.wso2.carbon.message.flow.tracer.ui.i18n.Resources">
@@ -39,17 +40,11 @@
     <h4>Flow Trace</h4>
     <br>
 
-    <%for (String trace:flowTrace){%>
     <%
-        String[] components = trace.split("->");
-
-        for(String component:components){%>
-            <%=component%>
-            <br>
-            <br>
+        for (String level:flowTrace){%>
+           <%=level%>
+        <br>
         <%}
     %>
-    <br>
-    <%}%>
 
 </fmt:bundle>

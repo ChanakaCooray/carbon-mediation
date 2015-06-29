@@ -56,7 +56,7 @@
             <thead>
             <tr>
                 <th width="30%"><fmt:message key="message.flow.id"/></th>
-                <th width="15%"><fmt:message key="type"/></th>
+                <th width="15%"><fmt:message key="EntryType"/></th>
                 <th width="15%"><fmt:message key="timestamp"/></th>
             </tr>
             </thead>

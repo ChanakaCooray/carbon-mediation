@@ -5,6 +5,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.synapse.flowtracer.data.xsd.MessageFlowComponentEntry;
 import org.apache.synapse.flowtracer.data.xsd.MessageFlowTraceEntry;
+import org.wso2.carbon.message.flow.tracer.data.xsd.ComponentNode;
 import org.wso2.carbon.message.flow.tracer.stub.MessageFlowTracerServiceStub;
 
 import java.rmi.RemoteException;
@@ -33,7 +34,7 @@ public class MessageFlowTracerClient {
 
     public String[] getMessageFlowTrace(String messageId) throws Exception {
         try {
-            return stub.getMessageFlowInfo(messageId);
+            return stub.getMessageFlowInLevels(messageId);
         } catch (RemoteException e) {
             String msg = "Error"
                     + " . Backend service may be unavailable";
