@@ -17,7 +17,7 @@ public class FlowPath {
                 nodeMap.get(messageFlowComponentEntry.getComponentId()).getEntries().add(messageFlowComponentEntry);
             }
             else{
-                nodeMap.put(messageFlowComponentEntry.getComponentId(),new ComponentNode(messageFlowComponentEntry.getComponentId(),messageFlowComponentEntry));
+                nodeMap.put(messageFlowComponentEntry.getComponentId(),new ComponentNode(messageFlowComponentEntry.getComponentId(),messageFlowComponentEntry.getComponentName(),messageFlowComponentEntry));
             }
         }
 
