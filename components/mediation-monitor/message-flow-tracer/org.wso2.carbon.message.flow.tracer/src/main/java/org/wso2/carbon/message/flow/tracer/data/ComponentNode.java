@@ -10,11 +10,13 @@ import java.util.Set;
 public class ComponentNode {
 
     private String componentId;
+    private String componentName;
     private List<MessageFlowComponentEntry> entries;
     private Set<ComponentNode> nodeList;
 
-    public ComponentNode(String componentId, MessageFlowComponentEntry entry) {
+    public ComponentNode(String componentId, String componentName, MessageFlowComponentEntry entry) {
         this.componentId = componentId;
+        this.componentName = componentName;
         this.entries = new ArrayList<>();
         this.entries.add(entry);
         nodeList = new HashSet<>();
@@ -34,5 +36,9 @@ public class ComponentNode {
 
     public String getComponentId() {
         return componentId;
+    }
+
+    public String getComponentName() {
+        return componentName;
     }
 }

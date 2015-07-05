@@ -21,6 +21,16 @@
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.9.13</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -35,6 +45,18 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>org.wso2.carbon.message.flow.tracer.*,
                                         org.wso2.carbon.message.flow.tracer.data.*</Export-Package>
+                        <Import-Package>org.apache.synapse.flowtracer.*,
+                                        org.codehaus.jackson.*,
+                                        javax.xml.*,
+                                        org.joda.time.*,
+                                        org.w3c.dom.*,
+                                        org.xml.sax.*,
+                        </Import-Package>
+                        <Embed-Dependency>
+                            json-simple;scope=compile|runtime;inline=false,
+                            jackson-core-asl;scope=compile|runtime;inline=false,
+                            jackson-mapper-asl;scope=compile|runtime;inline=false,
+                        </Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>

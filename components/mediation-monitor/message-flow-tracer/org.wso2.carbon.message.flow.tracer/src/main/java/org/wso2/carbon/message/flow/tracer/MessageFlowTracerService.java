@@ -3,9 +3,10 @@ package org.wso2.carbon.message.flow.tracer;
 import org.apache.synapse.flowtracer.data.MessageFlowComponentEntry;
 import org.apache.synapse.flowtracer.data.MessageFlowTraceEntry;
 import org.apache.synapse.flowtracer.MessageFlowDbConnector;
-import org.wso2.carbon.message.flow.tracer.data.ComponentNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.wso2.carbon.message.flow.tracer.data.FlowPath;
 
+import java.io.IOException;
 import java.util.*;
 
 public class MessageFlowTracerService {
@@ -35,15 +36,15 @@ public class MessageFlowTracerService {
         return new MessageFlowComponentEntry[2];
     }
 
-    public ComponentNode getMessageFlow(String messageId){
-        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
-
-        MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
-
-        FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
-
-        return flowPath.getHead();
-    }
+//    public ComponentNode getMessageFlow(String messageId){
+//        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
+//
+//        MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
+//
+//        FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
+//
+//        return flowPath.getHead();
+//    }
 
     public String[] getMessageFlowInLevels(String messageId){
         String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
@@ -67,6 +68,26 @@ public class MessageFlowTracerService {
         }
 
         return levels;
+    }
+
+    public String getMessageFlowInJson(String messageId){
+        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
+
+        MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
+
+        FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        String jsonString = null;
+
+        try {
+            jsonString = mapper.writeValueAsString(flowPath.getHead());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return jsonString;
     }
 
     public void clearAll(){
