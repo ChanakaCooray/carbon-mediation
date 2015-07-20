@@ -1,5 +1,5 @@
 function flowDetails(messageID) {
-    document.location.href = "flowdetails.jsp?" + "messageid=" + messageID;
+    document.location.href = "messageflowdetails.jsp?" + "messageid=" + messageID;
 }
 
 function clearAllNew() {

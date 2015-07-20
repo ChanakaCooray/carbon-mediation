@@ -4,9 +4,11 @@ import org.apache.synapse.flowtracer.data.MessageFlowComponentEntry;
 import org.apache.synapse.flowtracer.data.MessageFlowTraceEntry;
 import org.apache.synapse.flowtracer.MessageFlowDbConnector;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.wso2.carbon.message.flow.tracer.data.FlowPath;
+import org.codehaus.jackson.node.ObjectNode;
+import org.wso2.carbon.message.flow.tracer.data.*;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.*;
 
 public class MessageFlowTracerService {
@@ -26,25 +28,9 @@ public class MessageFlowTracerService {
         return messageFlows.values().toArray(new MessageFlowTraceEntry[messageFlows.values().size()]);
     }
 
-//    public String[] getMessageFlowInfo(String messageId){
-//        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
-//
-//        return messageFlows;
-//    }
-
     public MessageFlowComponentEntry[] getComponentInfo(String messageId, String componentId){
         return new MessageFlowComponentEntry[2];
     }
-
-//    public ComponentNode getMessageFlow(String messageId){
-//        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
-//
-//        MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
-//
-//        FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
-//
-//        return flowPath.getHead();
-//    }
 
     public String[] getMessageFlowInLevels(String messageId){
         String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
@@ -70,7 +56,28 @@ public class MessageFlowTracerService {
         return levels;
     }
 
-    public String getMessageFlowInJson(String messageId){
+//    public String getMessageFlowInJson(String messageId){
+//        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
+//
+//        MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
+//
+//        FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//
+//        String jsonString = null;
+//
+//        try {
+//            jsonString = mapper.writeValueAsString(flowPath.getHead());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return jsonString;
+//    }
+
+    public Edge[] getAllEdges(String messageId){
+
         String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
 
         MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
@@ -81,8 +88,51 @@ public class MessageFlowTracerService {
 
         String jsonString = null;
 
+        Map<String, ComponentNode> componentNodeHashMap = flowPath.getNodeMap();
+
+        Set<Edge> edges = new HashSet<>();
+
+        for(ComponentNode node1:componentNodeHashMap.values()){
+            for(ComponentNode node2:node1.getNodeList()){
+                edges.add(new Edge(node1.getComponentId(),node2.getComponentId()));
+            }
+        }
+
+        return edges.toArray(new Edge[edges.size()]);
+    }
+
+    public String getAllComponents(String messageId){
+        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
+
+        MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
+
+        FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
+
+        String jsonString = null;
+
+        Map<String, ComponentNode> componentNodeHashMap = flowPath.getNodeMap();
+
+        Map<String, Map<String, String>> hoverNodeMap = new HashMap<>();
+
+        for(ComponentNode node:componentNodeHashMap.values()){
+            Map<String, String> propertyMap = new HashMap<>();
+            propertyMap.put("label",node.getComponentName());
+            if(node.getEntries().size()>1) {
+                propertyMap.put("description", node.getEntries().get(0).isStart() + "<br>" + node.getEntries().get(1).isStart());
+            }
+            else{
+                propertyMap.put("description", node.getEntries().get(0).isStart()+"");
+            }
+
+            propertyMap.put("style","fill: #f77");
+
+            hoverNodeMap.put(node.getComponentId(), propertyMap);
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+
         try {
-            jsonString = mapper.writeValueAsString(flowPath.getHead());
+            jsonString = mapper.writeValueAsString(hoverNodeMap);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -71,6 +71,10 @@ public class FlowPath {
 
     }
 
+    public Map<String, ComponentNode> getNodeMap() {
+        return nodeMap;
+    }
+
     public ComponentNode getHead() {
         return head;
     }
