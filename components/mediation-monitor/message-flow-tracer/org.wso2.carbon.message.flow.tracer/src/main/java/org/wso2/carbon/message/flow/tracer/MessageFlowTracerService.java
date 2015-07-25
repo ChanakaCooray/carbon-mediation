@@ -119,12 +119,33 @@ public class MessageFlowTracerService {
             propertyMap.put("label",node.getComponentName());
             if(node.getEntries().size()>1) {
                 propertyMap.put("description", node.getEntries().get(0).isStart() + "<br>" + node.getEntries().get(1).isStart());
+                propertyMap.put("beforepayload", (node.getEntries().get(0).isStart()? node.getEntries().get(0).getPayload():node.getEntries().get(1).getPayload()));
+                propertyMap.put("afterpayload", (node.getEntries().get(0).isStart()? node.getEntries().get(1).getPayload():node.getEntries().get(0).getPayload()));
+
+                propertyMap.put("beforeproperties", (node.getEntries().get(0).isStart()? node.getEntries().get(0).getPropertySet():node.getEntries().get(1).getPropertySet()));
+                propertyMap.put("afterproperties", (node.getEntries().get(0).isStart()? node.getEntries().get(1).getPropertySet():node.getEntries().get(0).getPropertySet()));
+            }
+            else if(node.getEntries().size() == 1){
+                propertyMap.put("description", node.getEntries().get(0).isStart()+"");
+                propertyMap.put("beforepayload", node.getEntries().get(0).getPayload());
+
+                propertyMap.put("beforeproperties", node.getEntries().get(0).getPropertySet());
             }
             else{
-                propertyMap.put("description", node.getEntries().get(0).isStart()+"");
+                propertyMap.put("description", "N/A");
             }
 
-            propertyMap.put("style","fill: #f77");
+            if(node.getEntries().size()==0 || node.getEntries().size()==1){
+                propertyMap.put("style","fill: #F00");
+            }
+            else{
+                if(!node.getEntries().get(0).isResponse()){
+                    propertyMap.put("style","fill: #0FF");
+                }
+                else{
+                    propertyMap.put("style","fill: #0F0");
+                }
+            }
 
             hoverNodeMap.put(node.getComponentId(), propertyMap);
         }

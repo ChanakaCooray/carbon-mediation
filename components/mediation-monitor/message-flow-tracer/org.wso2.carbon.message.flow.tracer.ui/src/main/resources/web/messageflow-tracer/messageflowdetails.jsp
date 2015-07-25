@@ -75,16 +75,24 @@
 
     /* This styles the title of the tooltip */
     .tipsy .name {
-      font-size: 1.5em;
-      font-weight: bold;
-      color: #60b1fc;
-      margin: 0;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #000;
+        margin: 0;
+    }
+
+    .tipsy .tipsy-inner {
+        background-color: #FFF;
+        color: #000;
+        resize:horizontal; max-width:400px; min-width:100px;
     }
 
     /* This styles the body of the tooltip */
     .tipsy .description {
-      font-size: 1.2em;
+        font-size: 1.2em;
+        color: #000;
     }
+
     </style>
 
     <svg width=960 height=600></svg>
@@ -122,16 +130,29 @@
     svg.call(zoom);
 
     // Simple function to style the tooltip for the given node.
-    var styleTooltip = function(name, description) {
-      return "<p class='name'>" + name + "</p><p class='description'>" + description + "</p>";
+    var styleTooltip = function(beforepayload, afterpayload, beforeproperties, afterproperties) {
+
+        var x = (beforepayload+"").split("\n").join("<br>");
+        var y = (afterpayload+"").split("\n").join("<br>");
+
+        var a = (beforeproperties+"").split(",").join("<br>");
+        var b = (afterproperties+"").split(",").join("<br>");
+
+        return "<h2>Before Payload</h2>"+x+"<br><hr>"+"<h2>Before Properties</h2>"+a+"<br><hr>"+"<h2>After Payload</h2>"+y+"<br><hr>"+"<h2>After Properties</h2>"+b;
     };
 
     // Run the renderer. This is what draws the final graph.
     render(inner, g);
 
     inner.selectAll("g.node")
-      .attr("title", function(v) { return styleTooltip(g.node(v).label, g.node(v).description) })
-      .each(function(v) { $(this).tipsy({ gravity: "w", opacity: 1, html: true }); });
+            .attr("title", function(v) { return styleTooltip(g.node(v).beforepayload, g.node(v).afterpayload, g.node(v).beforeproperties, g.node(v).afterproperties) })
+            .each(function(v) {
+                $(this).tipsy({ trigger: 'focus', fade:true, gravity: $.fn.tipsy.autoWE , opacity: 1, html: true, offset: 10 });
+            });
+
+//    inner.selectAll("g.node")
+//      .attr("title", function(v) { return styleTooltip(g.node(v).label, g.node(v).description) })
+//      .each(function(v) { $(this).tipsy({ gravity: "w", opacity: 1, html: true }); });
 
     // Center the graph
     var initialScale = 1;
