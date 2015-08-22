@@ -33,20 +33,14 @@ public class MessageFlowTracerService {
     }
 
     public String[] getMessageFlowInLevels(String messageId){
-        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
-
+        String[] messageFlows = messageFlowDbConnector.getMessageFlowTrace(messageId);
         MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
-
         FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
-
         Map<Integer,List<String>> levelMap = new TreeMap<>();
-
         List<String> initialList = new ArrayList<>();
         initialList.add(flowPath.getHead().getEntries().get(0).getComponentName());
         levelMap.put(0,initialList);
-
         flowPath.buildFlowWithLevels(levelMap,1,flowPath.getHead());
-
         String[] levels = new String[levelMap.size()];
 
         for(Integer i:levelMap.keySet()){
@@ -56,36 +50,12 @@ public class MessageFlowTracerService {
         return levels;
     }
 
-//    public String getMessageFlowInJson(String messageId){
-//        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
-//
-//        MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
-//
-//        FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//
-//        String jsonString = null;
-//
-//        try {
-//            jsonString = mapper.writeValueAsString(flowPath.getHead());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return jsonString;
-//    }
-
     public Edge[] getAllEdges(String messageId){
 
-        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
-
+        String[] messageFlows = messageFlowDbConnector.getMessageFlowTrace(messageId);
         MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
-
         FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
-
         ObjectMapper mapper = new ObjectMapper();
-
         String jsonString = null;
 
         Map<String, ComponentNode> componentNodeHashMap = flowPath.getNodeMap();
@@ -102,16 +72,11 @@ public class MessageFlowTracerService {
     }
 
     public String getAllComponents(String messageId){
-        String[] messageFlows = messageFlowDbConnector.getMessageFlowInfo(messageId);
-
+        String[] messageFlows = messageFlowDbConnector.getMessageFlowTrace(messageId);
         MessageFlowComponentEntry[] messageFlowComponentEntries = messageFlowDbConnector.getComponentInfo(messageId);
-
         FlowPath flowPath = new FlowPath(messageFlows,messageFlowComponentEntries);
-
         String jsonString = null;
-
         Map<String, ComponentNode> componentNodeHashMap = flowPath.getNodeMap();
-
         Map<String, Map<String, String>> hoverNodeMap = new HashMap<>();
 
         for(ComponentNode node:componentNodeHashMap.values()){
@@ -162,6 +127,6 @@ public class MessageFlowTracerService {
     }
 
     public void clearAll(){
-        messageFlowDbConnector.clearTable();
+        messageFlowDbConnector.clearTables();
     }
 }

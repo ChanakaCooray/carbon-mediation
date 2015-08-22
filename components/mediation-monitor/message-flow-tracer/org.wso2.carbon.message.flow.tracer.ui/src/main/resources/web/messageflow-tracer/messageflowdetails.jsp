@@ -73,6 +73,21 @@
       pointer-events: none;
     }
 
+    table#t01 {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    table#t01 th{
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    table#t01 td{
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
     /* This styles the title of the tooltip */
     .tipsy .name {
         font-size: 1.5em;
@@ -84,7 +99,7 @@
     .tipsy .tipsy-inner {
         background-color: #FFF;
         color: #000;
-        resize:horizontal; max-width:400px; min-width:100px;
+        resize:horizontal; max-width:900px; min-width:100px;
     }
 
     /* This styles the body of the tooltip */
@@ -95,7 +110,7 @@
 
     </style>
 
-    <svg width=960 height=600></svg>
+    <svg width=960 height=1000></svg>
 
     <script id="js">
     // Create a new directed graph
@@ -135,10 +150,28 @@
         var x = (beforepayload+"").split("\n").join("<br>");
         var y = (afterpayload+"").split("\n").join("<br>");
 
-        var a = (beforeproperties+"").split(",").join("<br>");
-        var b = (afterproperties+"").split(",").join("<br>");
+        var a = (beforeproperties+"").split(",");
+        var b = (afterproperties+"").split(",");
 
-        return "<h2>Before Payload</h2>"+x+"<br><hr>"+"<h2>Before Properties</h2>"+a+"<br><hr>"+"<h2>After Payload</h2>"+y+"<br><hr>"+"<h2>After Properties</h2>"+b;
+        var beforePropTable = "<table id = \"t01\" style=\"width:100%\">";
+
+        for (var i in a) {
+            var property = a[i].split("=");
+            beforePropTable = beforePropTable + "<tr><td>"+property[0]+"</td><td>"+property[1]+"</td><tr>";
+        }
+
+        beforePropTable = beforePropTable + "</table>";
+
+        var afterPropTable = "<table id = \"t01\" style=\"width:100%\">";
+
+        for (var i in b) {
+            var property = b[i].split("=");
+            afterPropTable = afterPropTable + "<tr><td>"+property[0]+"</td><td>"+property[1]+"</td><tr>";
+        }
+
+        afterPropTable = afterPropTable + "</table>";
+
+        return "<h2>Before Payload</h2>"+x+"<br><hr>"+"<h2>Before Properties</h2>"+beforePropTable+"<br><hr>"+"<h2>After Payload</h2>"+y+"<br><hr>"+"<h2>After Properties</h2>"+afterPropTable;
     };
 
     // Run the renderer. This is what draws the final graph.
@@ -147,7 +180,7 @@
     inner.selectAll("g.node")
             .attr("title", function(v) { return styleTooltip(g.node(v).beforepayload, g.node(v).afterpayload, g.node(v).beforeproperties, g.node(v).afterproperties) })
             .each(function(v) {
-                $(this).tipsy({ trigger: 'focus', fade:true, gravity: $.fn.tipsy.autoWE , opacity: 1, html: true, offset: 10 });
+                $(this).tipsy({ trigger: 'focus', fade:true, gravity: 'n' , opacity: 1, html: true, offset: 10 });
             });
 
 //    inner.selectAll("g.node")

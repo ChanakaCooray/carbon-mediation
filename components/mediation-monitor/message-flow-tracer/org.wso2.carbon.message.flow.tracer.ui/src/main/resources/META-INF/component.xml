@@ -10,7 +10,7 @@
             <order>55</order>
             <style-class>manage</style-class>
             <icon>../messageflow-tracer/images/students.gif</icon>
-            <require-permission>/permission/protected/manage</require-permission>
+            <require-permission>/permission/admin/monitor/mediation</require-permission>
         </menu>
     </menus>
 </component>
